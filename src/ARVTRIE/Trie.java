@@ -40,4 +40,55 @@ private class Trie{
         atual.fimDaPalavra=true;
 
         }
+
+    public  boolean buscar(String palavra){
+        if (palavra == null){ // se palavra vazia
+            return false;
+        }
+
+        NodeTrie atual = raiz;
+        palavra=palavra.toLowerCase();
+
+        //percorre a trie buscando a letra e a posição
+        for (int i =0; i<palavra.length();i++){
+            char letra = palavra.charAt(i);
+            int indice = letra -'a';
+
+
+        // se o caminho da letra nao existir, 
+        if (indice <0 || indice >=26 || atual.crianca[indice]==null){
+            return false;
+        }
+
+        //Avanca para o nó da letra
+        atual = atual.criancas[indice];
     }
+    return atual.fimDaPalavra; //retorna true se for o fim
+}
+
+
+    public boolean comecaCom(String prefixo){
+        if (prefixo==null){
+            return  false;
+        }
+
+        NodeTrie atual =raiz;
+        prefixo = prefixo.toLowerCase();
+
+        for (int i = 0; i < prefixo.length(); i++) {
+            char letra = prefixo.charAt(i);
+            int indice = letra - 'a';
+
+            // Se o caminho do prefixo quebrar, nao existe nenhuma palavra com esse inicio
+            if (indice < 0 || indice >= 26 || atual.criancas[indice] == null) {
+                return false;
+            }
+
+            // Avança para o nó do prefixo
+            atual = atual.criancas[indice];
+        }
+
+        // Se conseguiu percorrer todas as letras do prefixo até o fim, retorna true
+        return true;
+    }
+}
