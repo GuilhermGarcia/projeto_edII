@@ -1,8 +1,8 @@
 package ARVBIN;
 
-public class TrieNode{
+public class NodeTrie{
 
-    public NoTrie[] criancas; // guarda o alfabeto
+    public NodeTrie[] criancas; // guarda o alfabeto
 
     public boolean fimDaPalavra; // indica o fim da palavra
 
@@ -10,9 +10,9 @@ public class TrieNode{
     public int frequencia;
 
     //Construtor do no
-    public NoTrie(){
+    public NodeTrie(){
         //aloca 26 posicoes para letras no construtor
-        this.criancas = new NoTrie[26];
+        this.criancas = new NodeTrie[26];
         this.fimDaPalavra = false;
         this.frequencia = 0;
     }

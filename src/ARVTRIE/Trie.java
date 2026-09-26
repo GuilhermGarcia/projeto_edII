@@ -1,6 +1,6 @@
 package  ARVBIN;
 
-private class Trie{
+public class Trie{
 
     private NodeTrie raiz;
 
@@ -8,7 +8,7 @@ private class Trie{
         this.raiz = new NodeTrie();
     }
     //iserir palavra na trie
-    public void inserir (string palavra){
+    public void inserir (String palavra){
         if(palavra == null){//caso vazio
             return;
         }
@@ -29,7 +29,7 @@ private class Trie{
 
          //caso não exista nó para essa letra, cria outro
          if (atual.criancas[indice] == null){
-             atual.crianca[indice] = new NodeTrie();
+             atual.criancas[indice] = new NodeTrie();
             
          }
          //avanca ate o no da letra que queremos
@@ -56,7 +56,7 @@ private class Trie{
 
 
         // se o caminho da letra nao existir, 
-        if (indice <0 || indice >=26 || atual.crianca[indice]==null){
+        if (indice <0 || indice >=26 || atual.criancas[indice]==null){
             return false;
         }
 
