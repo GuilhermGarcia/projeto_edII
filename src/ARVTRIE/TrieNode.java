@@ -11,7 +11,7 @@ public class TrieNode{
 
     //Construtor do no
     public NoTrie(){
-        //26 posicoes para letras 
+        //aloca 26 posicoes para letras no construtor
         this.criancas = new NoTrie[26];
         this.fimDaPalavra = false;
         this.frequencia = 0;
