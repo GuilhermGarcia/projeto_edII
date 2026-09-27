@@ -1,4 +1,4 @@
-package ARVBIN;
+package ARVTRIE;
 
 public class NodeTrie{
 
