@@ -149,4 +149,42 @@ public class Trie{
         return sugestoes;
         
     }
+
+    // =========================================================
+    // MÉTODOS DA FASE 2: FREQUÊNCIA - BGR
+    // =========================================================
+
+    // Retorna a frequencia da palavra (0 se nao existir ou nao for final)
+    public int getFrequency(String word) {
+        NodeTrie node = traverseTo(word);
+        return (node != null && node.fimDaPalavra) ? node.frequencia : 0;
+    }
+
+    // Atualiza a frequencia de uma palavra existente
+    public void updateFrequency(String word, int frequency) {
+        NodeTrie node = traverseTo(word);
+        if (node != null && node.fimDaPalavra) {
+            node.frequencia = frequency;
+        }
+    }
+
+    // Auxiliar: percorre a Trie ate o no correspondente a palavra
+    private NodeTrie traverseTo(String word) {
+        if (word == null) return null;
+        
+        NodeTrie atual = raiz;
+        word = word.toLowerCase();
+
+        for (int i = 0; i < word.length(); i++) {
+            char letra = word.charAt(i);
+            int indice = letra - 'a';
+
+            // Se quebrar o caminho, a palavra não existe
+            if (indice < 0 || indice >= 26 || atual.criancas[indice] == null) {
+                return null;
+            }
+            atual = atual.criancas[indice];
+        }
+        return atual;
+    }
 }
