@@ -5,8 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
-//BGR
-
+/** Fachada que mantem sincronizadas a Trie de palavras e a BST de frequencias. */
 public class Dicionario {
     
     private Trie trie;
@@ -17,19 +16,15 @@ public class Dicionario {
         ranking = new BSTWordRanking();
     }
 
-    // ==========================================================
-    // MÉTODOS DA FASE 1: LEITURA E BUSCA
-    // ==========================================================
-    
+    /** Cria as duas estruturas usadas pelo dicionario. */
     public void carregar(String arquivo) {
         try (BufferedReader br = new BufferedReader(new FileReader(arquivo))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 linha = linha.trim().toLowerCase();
                 if (!linha.isEmpty()) {
-                    // Insere na Trie com frequencia 0 (padrao do construtor NodeTrie)
+                    // A Trie atende buscas e a BST mantem o mesmo vocabulario para o ranking.
                     trie.inserir(linha);
-                    // Registra na BST com frequencia 0
                     ranking.addOrUpdate(linha, 0);
                 }
             }
@@ -43,10 +38,7 @@ public class Dicionario {
         return trie.buscar(palavra);
     }
 
-    // ==========================================================
-    // MÉTODOS DA FASE 2: RANKING E ATUALIZAÇÃO
-    // ==========================================================
-    
+    /** Registra um uso e atualiza a frequencia nas duas estruturas. */
     public void registrarUso(String palavra) {
         palavra = palavra.toLowerCase();
         

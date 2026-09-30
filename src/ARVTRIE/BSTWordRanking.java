@@ -3,11 +3,12 @@ package ARVTRIE;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Mantem as palavras em uma BST lexicografica e associa cada uma a sua frequencia. */
 public class BSTWordRanking {
     
     private Node root;
 
-    // Classe interna do Nó conforme exigido no enunciado
+    /** No da BST; a chave e a palavra e o valor associado e a frequencia. */
     private class Node {
         String word;
         int frequency;
@@ -19,7 +20,7 @@ public class BSTWordRanking {
         }
     }
 
-    // Insere palavra nova OU atualiza frequência se já existir
+    /** Insere uma palavra ou substitui sua frequencia quando ela ja existe. */
     public void addOrUpdate(String word, int newFrequency) {
         root = addOrUpdateRec(root, word, newFrequency);
     }
@@ -29,20 +30,18 @@ public class BSTWordRanking {
             return new Node(word, newFrequency);
         }
 
-        // Ordenação lexicográfica (alfabética) para busca O(h)
         int cmp = word.compareTo(node.word);
         if (cmp < 0) {
             node.left = addOrUpdateRec(node.left, word, newFrequency);
         } else if (cmp > 0) {
             node.right = addOrUpdateRec(node.right, word, newFrequency);
         } else {
-            // A palavra já existe, apenas atualiza a frequência no próprio nó
             node.frequency = newFrequency;
         }
         return node;
     }
 
-    // Retorna a frequência de uma palavra (0 se não existir)
+    /** Retorna a frequencia da palavra; zero representa ausencia ou frequencia zero. */
     public int getFrequency(String word) {
         Node node = searchRec(root, word);
         return (node != null) ? node.frequency : 0;
@@ -58,7 +57,7 @@ public class BSTWordRanking {
         return searchRec(node.right, word);
     }
 
-    // Remove uma palavra (usado internamente caso precise)
+    /** Remove uma palavra e recompõe a BST preservando sua ordenacao. */
     public void remove(String word) {
         root = removeRec(root, word);
     }
@@ -93,23 +92,21 @@ public class BSTWordRanking {
         return current;
     }
 
-    // Retorna as N palavras mais frequentes (ordem decrescente)
+    /** Retorna ate n palavras, ordenadas por frequencia decrescente. */
     public List<String> getTopWords(int n) {
         List<Node> allNodes = new ArrayList<>();
         collectAll(root, allNodes);
 
-        // Ordena a lista inteira por frequência usando lambda (O(n log n))
         allNodes.sort((a, b) -> Integer.compare(b.frequency, a.frequency));
 
         List<String> topWords = new ArrayList<>();
-        // Pega apenas as 'n' primeiras palavras (ou o máximo que tivermos)
         for (int i = 0; i < Math.min(n, allNodes.size()); i++) {
             topWords.add(allNodes.get(i).word);
         }
         return topWords;
     }
 
-    // Coleta todas as palavras em ordem para a lista (auxiliar)
+    /** Faz percurso em ordem para transferir todos os nos para uma lista. */
     private void collectAll(Node node, List<Node> out) {
         if (node != null) {
             collectAll(node.left, out);

@@ -33,6 +33,7 @@ public class Main {
 
 	public static void main(String[] args) {
 
+	    // Exemplo minimo de insercao e consulta de palavras por prefixo.
 	    Trie trie = new Trie();
 
 	    trie.inserir("casa");

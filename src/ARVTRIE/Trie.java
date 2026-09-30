@@ -3,72 +3,75 @@ package  ARVTRIE;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Arvore de prefixos para armazenar palavras formadas pelas letras de 'a' a
+ * 'z'. Alem da busca exata, permite localizar rapidamente o no de um prefixo
+ * e enumerar todas as palavras abaixo dele.
+ */
 public class Trie{
 
     private NodeTrie raiz;
 
-    public Trie(){ // construtor
+    /** Cria a raiz vazia da Trie. A raiz nao representa nenhuma letra. */
+    public Trie(){
         this.raiz = new NodeTrie();
     }
-    //iserir palavra na trie
+
+    /**
+     * Insere uma palavra, criando os nos que ainda nao existem.
+     * Caracteres fora de 'a' a 'z' nao possuem uma posicao na estrutura e sao
+     * ignorados durante a montagem do caminho.
+     */
     public void inserir (String palavra){
-        if(palavra == null){//caso vazio
+        if(palavra == null){
             return;
         }
 
         NodeTrie atual = raiz;
         palavra = palavra.toLowerCase(); //deixa td minusculo
 
-        //laço para percorre a palavra
+        // Cada nivel representa uma letra do caminho da palavra.
         for (int i =0; i< palavra.length();i++){
-        //charAt()= metodo para retornar o i
-         char letra = palavra.charAt(i);//extrai o caracter i
-         int indice=letra- 'a';// descobre possição (0 a 25)
+         char letra = palavra.charAt(i);
+         int indice=letra- 'a';
 
-         if(indice <0 || indice >=26){ // impede valor inválido
+         if(indice <0 || indice >=26){
             continue;
          }
 
-         //caso não exista nó para essa letra, cria outro
          if (atual.criancas[indice] == null){
              atual.criancas[indice] = new NodeTrie();
-            
          }
-         //avanca ate o no da letra que queremos
          atual = atual.criancas[indice];
-
         }
-        //marca o ultimo nó que forma a palavra
+
+        // Somente o no final recebe a marca de palavra completa.
         atual.fimDaPalavra=true;
-
         }
 
+    /** Retorna true somente quando todo o caminho existe e termina uma palavra. */
     public  boolean buscar(String palavra){
-        if (palavra == null){ // se palavra vazia
+        if (palavra == null){
             return false;
         }
 
         NodeTrie atual = raiz;
         palavra=palavra.toLowerCase();
 
-        //percorre a trie buscando a letra e a posição
         for (int i =0; i<palavra.length();i++){
             char letra = palavra.charAt(i);
             int indice = letra -'a';
 
-
-        // se o caminho da letra nao existir, 
         if (indice <0 || indice >=26 || atual.criancas[indice]==null){
             return false;
         }
 
-        //Avanca para o nó da letra
         atual = atual.criancas[indice];
     }
-    return atual.fimDaPalavra; //retorna true se for o fim
+    return atual.fimDaPalavra;
 }
 
-
+    /** Indica se existe ao menos uma palavra cujo inicio e o prefixo informado. */
     public boolean comecaCom(String prefixo){
         if (prefixo==null){
             return  false;
@@ -81,46 +84,43 @@ public class Trie{
             char letra = prefixo.charAt(i);
             int indice = letra - 'a';
 
-            // Se o caminho do prefixo quebrar, nao existe nenhuma palavra com esse inicio
             if (indice < 0 || indice >= 26 || atual.criancas[indice] == null) {
                 return false;
             }
 
-            // Avança para o nó do prefixo
             atual = atual.criancas[indice];
         }
 
-        // Se conseguiu percorrer todas as letras do prefixo até o fim, retorna true
         return true;
     }
-    
+
+    /**
+     * Percorre a subarvore em ordem alfabetica e acrescenta suas palavras a
+     * lista. O StringBuilder e reutilizado: cada chamada desfaz o caractere
+     * acrescentado antes de voltar ao nivel anterior da recursao.
+     */
     void coletarPalavras(NodeTrie atual, StringBuilder prefixo, List<String> sugestoes){
-    	//se letra tiver a flag fimDaPalavra, adicionar a palavra a lista de sugestões
     	if(atual.fimDaPalavra) {
     		sugestoes.add(prefixo.toString());
     	}
     	
-    	//para cada letra no nó chamar, a função coletarPalavras
     	for (int i = 0; i < atual.criancas.length; i++) {
     		 if (atual.criancas[i] != null) {
-	    		// encontrar a letra correspondente no ASCII
 	   			char letra = (char) ('a' + i);
 	   			
 		        prefixo.append(letra);
 		      
 		        coletarPalavras(atual.criancas[i], prefixo, sugestoes);
 		        
-		        // resetar prefixo para proxima iteração do loop
 		        prefixo.deleteCharAt(prefixo.length() - 1);
 			}
     	}
     }
-    
+
+    /** Retorna todas as palavras que comecam com o prefixo, em ordem alfabetica. */
     public List<String> sugerir(String prefixo){
-    	// inicializar lista responsavel por guardar as palavras sugeridas
     	List<String> sugestoes =  new ArrayList<>();
     	
-    	//caso o prefixo seja nulo, retornar lista vazia
     	if (prefixo==null){
             return sugestoes;
         }
@@ -128,39 +128,29 @@ public class Trie{
     	NodeTrie atual = raiz;
         prefixo = prefixo.toLowerCase();
         
-        // loop for responsavel por posicionar o nó no mesmo ponto que o prefixo
         for (int i = 0; i < prefixo.length(); i++) {
             char letra = prefixo.charAt(i);
-            
-            //determinar o indice corresponde a letra
             int indice = letra - 'a';
             
-            // caso o indice corresponda a um caractere invalido retornar lista vazia
             if (indice < 0 ||indice >= 26 ||atual.criancas[indice] == null) {
                 return sugestoes;
             }
-            //mover no atual para a proxima letra no prefixo
             atual = atual.criancas[indice];
         }
         
-        //chamar função responsavel por montar lista de sugestoes
         coletarPalavras(atual,new StringBuilder(prefixo),sugestoes);
 
         return sugestoes;
         
     }
 
-    // =========================================================
-    // MÉTODOS DA FASE 2: FREQUÊNCIA - BGR
-    // =========================================================
-
-    // Retorna a frequencia da palavra (0 se nao existir ou nao for final)
+    /** Retorna a frequencia da palavra, ou zero se ela nao existir. */
     public int getFrequency(String word) {
         NodeTrie node = traverseTo(word);
         return (node != null && node.fimDaPalavra) ? node.frequencia : 0;
     }
 
-    // Atualiza a frequencia de uma palavra existente
+    /** Atualiza a frequencia somente se o caminho representar uma palavra. */
     public void updateFrequency(String word, int frequency) {
         NodeTrie node = traverseTo(word);
         if (node != null && node.fimDaPalavra) {
@@ -168,7 +158,7 @@ public class Trie{
         }
     }
 
-    // Auxiliar: percorre a Trie ate o no correspondente a palavra
+    /** Localiza o no final do caminho de uma palavra, sem exigir que seja final. */
     private NodeTrie traverseTo(String word) {
         if (word == null) return null;
         
@@ -179,7 +169,6 @@ public class Trie{
             char letra = word.charAt(i);
             int indice = letra - 'a';
 
-            // Se quebrar o caminho, a palavra não existe
             if (indice < 0 || indice >= 26 || atual.criancas[indice] == null) {
                 return null;
             }

@@ -5,6 +5,7 @@ import java.util.List;
 public class MainTest {
 
     public static void main(String[] args) {
+        // Os testes sao executados diretamente pelo script, sem framework externo.
         System.out.println("=== INICIANDO TESTES AUTOMATIZADOS (FASES 1 E 2) ===");
         
         testTrieInsercaoEbusca();
@@ -22,6 +23,7 @@ public class MainTest {
         trie.inserir("carro");
         trie.inserir("computador");
 
+        // Valida tanto palavras existentes quanto uma palavra ausente.
         boolean passed1 = trie.buscar("casa") == true;
         boolean passed2 = trie.buscar("carro") == true;
         boolean passed3 = trie.buscar("computador") == true;
@@ -60,7 +62,7 @@ public class MainTest {
         System.out.println("\n[TESTE] Ranking por Frequência (Integração Dicionário)");
         Dicionario dic = new Dicionario();
         
-        // Simulando inserções via dicionário (que alimenta Trie e BST)
+        // Cada uso atualiza a Trie e a BST por meio da fachada Dicionario.
         dic.registrarUso("computador");
         dic.registrarUso("computador"); // frequencia 2
         dic.registrarUso("casa");       // frequencia 1
