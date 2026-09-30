@@ -1,0 +1,29 @@
+# ============================================================
+# ARQUIVO DE TESTE - AUTOCOMPLETE E RANKING (FASES 1 E 2)
+# ============================================================
+
+# --- FASE 1: Insercao e Busca ---
+add casa
+add carro
+add cachorro
+add cadeira
+add computador
+add compra
+
+search casa -> true
+search carro -> true
+search cadeira -> true
+search computador -> true
+search xyz -> false
+
+# --- FASE 1: Sugestao por Prefixo ---
+suggest ca -> [cachorro, cadeira, carro, casa]
+suggest comp -> [companhia, compartilhar, compra, computador]
+suggest xyz -> []
+
+# --- FASE 2: Ranking por Frequencia ---
+use computador
+use computador
+use casa
+
+suggest comp -> [computador(2), compra(0), companhia(0), compartilhar(0)]

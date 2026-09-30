@@ -1,4 +1,4 @@
-package ARVBIN;
+package ARVTRIE;
 
 import java.util.ArrayList;
 import java.util.List;
