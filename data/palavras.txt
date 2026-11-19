@@ -1,0 +1,8 @@
+casa
+carro
+cachorro
+cadeira
+computador
+compra
+companhia
+compartilhar

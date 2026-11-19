@@ -1,0 +1,53 @@
+# ============================================================
+# ARQUIVO DE TESTE - AUTOCOMPLETE
+# ============================================================
+# Comandos disponiveis:
+# add <palavra>     - insere palavra no dicionario (freq = 0)
+# use <palavra>     - registra uso (+1 na frequencia)
+# search <palavra>  - busca palavra (true/false)
+# suggest <prefixo> - lista palavras com o prefixo
+# correct <palavra> - corrige ortograficamente
+# "-> saida" (opcional) indica o resultado esperado.
+# ============================================================
+
+# --- FASE 1: Insercao e Busca ---
+add casa
+add carro
+add cachorro
+add cadeira
+add computador
+add compra
+
+search casa        -> true
+search carro       -> true
+search cadeira     -> true
+search computador  -> true
+search xyz         -> false
+
+# --- FASE 1: Sugestao por Prefixo ---
+suggest ca         -> [cachorro, cadeira, carro, casa]
+suggest comp       -> [companhia, compartilhar, compra, computador]
+suggest xyz        -> []
+
+# --- FASE 2: Ranking por Frequencia ---
+use computador     # +1 (freq = 1)
+use computador     # +1 (freq = 2)
+use casa           # +1 (freq = 1)
+
+suggest comp       -> [computador(2), compra(0), companhia(0), compartilhar(0)]
+
+# --- FASE 3: Correcao Ortografica ---
+correct computadro -> computador
+correct caza       -> casa
+correct cadiera    -> cadeira
+correct caro       -> carro
+correct xyz        -> (nenhuma)
+
+# --- FASE 3: Cache (consulta repetida e invalidacao) ---
+suggest comp       -> [computador(2), compra(0), companhia(0), compartilhar(0)]
+use compra
+use compra
+use compra
+suggest comp       -> [compra(3), computador(2), companhia(0), compartilhar(0)]
+add compras
+suggest compra     -> [compra(3), compras(0)]
